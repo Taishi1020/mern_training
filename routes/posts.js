@@ -1,5 +1,6 @@
 const router = require("express").Router()
 const Post = require("../models/Post");
+const User = require("../models/User");
 
 // 投稿の作成
 router.post("/", async (req, res) => {
@@ -64,6 +65,23 @@ router.put("/:id/like", async (req, res) => {
       await post.updateOne({$pull: {likes: req.body.userId}});
       return res.status(200).json("投稿のいいねを解除しました。");
     }
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+})
+
+// タイムラインの取得
+router.get("/timeline/all", async (req,res) => {
+  try {
+    const currentUser = await User.findById(req.body.userId);
+    // 自分の投稿を取得
+    const userPosts = await Post.find({userId: currentUser._id});
+    // フォローしているユーザーの投稿を取得
+    const friendPosts = await Promise.all(currentUser.followings.map(friendId => {
+      return Post.find({userId: friendId});
+    }));
+    // 自分の投稿とフォローしているユーザーの投稿を結合して返す
+    return res.status(200).json(userPosts.concat(...friendPosts));
   } catch (error) {
     return res.status(500).json(error);
   }
