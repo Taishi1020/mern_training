@@ -45,4 +45,35 @@ router.get("/:id", async(req, res) => {
     }
 })
 
+//  ユーザーをフォローする
+router.put("/:id/follow", async (req, res) => {
+    // 自分のユーザーIDと対象のユーザーIDが一致しない場合
+    if(req.body.userId !== req.params.id) {
+        try {
+            // 相手：対象のユーザー
+            const user = await User.findById(req.params.id);
+            // 自分：フォローするユーザー
+            const currentUser = await User.findById(req.body.userId);
+            // 相手のフォロワーに自分が含まれていない場合
+            if(!user.followers.includes(req.body.userId)) {
+                await user.updateOne({
+                    $push: { followers: req.body.userId},
+                })
+                // 自分のフォローリストに相手が含まれていない場合
+                await currentUser.updateOne({
+                    $push: { followings: req.params.id},
+                })
+                return res.status(200).json("フォローしました。");
+            } else {
+                return res.status(403).json("あなたはすでこのユーザーをフォローしています。");
+            }
+
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    } else {
+        return res.status(403).json("自分自身をフォローすることはできません。");
+    }
+})
+
 module.exports = router;
