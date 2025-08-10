@@ -43,7 +43,7 @@
     "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
     "editor.guides.bracketPairs": "active",
     "window.zoomLevel": -1,
-    "workbench.iconTheme": "vscode-icons",
+    "workbench.iconTheme": "material-icon-theme",
     "editor.inlayHints.fontSize": 1,
     "editor.inlayHints.fontFamily": "Menlo, Monaco, 'Courier New', monospace",
     "editor.formatOnSaveMode": "modifications",
