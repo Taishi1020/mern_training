@@ -26,7 +26,7 @@ router.delete("/:id", async(req, res) => {
             const user = await User.findByIdAndDelete(req.params.id)
             res.status(200).json("ユーザー情報を削除しました。")
         } catch (error) {
-           return res.status(500    ).json(err);
+           return res.status(500).json(err);
         }
     } else {
         return res.status(403).json("あなたは自分のアカウントのときだけ削除できます。");
@@ -39,7 +39,7 @@ router.get("/:id", async(req, res) => {
         const user = await User.findById(req.params.id);
         // パスワードと更新日時を除いて、ユーザー情報を返す
         const { password, updatedAt, ...other} = user._doc;
-        res.status(200).json(other);
+        return res.status(200).json(other);
     } catch (error) {
         return res.status(500).json(error);
     }
