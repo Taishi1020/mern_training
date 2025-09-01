@@ -88,4 +88,18 @@ router.get("/timeline/:userId", async (req,res) => {
 })
 
 
+// プロフィール専用のタイムラインの取得
+router.get("/profile/:username", async (req,res) => {
+  try {
+    const user = await User.findOne({username: req.params.username});
+    const posts = await Post.find({userId: user._id});
+    // フォローしているユーザーの投稿を取得
+    // 自分の投稿とフォローしているユーザーの投稿を結合して返す
+    return res.status(200).json(posts);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+})
+
+
 module.exports = router;

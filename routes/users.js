@@ -34,9 +34,23 @@ router.delete("/:id", async(req, res) => {
 })
 
 // ユーザー情報の取得
-router.get("/:id", async(req, res) => {
+// router.get("/:id", async(req, res) => {
+//     try {
+//         const user = await User.findById(req.params.id);
+//         // パスワードと更新日時を除いて、ユーザー情報を返す
+//         const { password, updatedAt, ...other} = user._doc;
+//         return res.status(200).json(other);
+//     } catch (error) {
+//         return res.status(500).json(error);
+//     }
+// })
+
+// クエリパラメータで情報を取得
+router.get("/", async(req, res) => {
+    const userId = req.query.userId
+    const username = req.query.username;
     try {
-        const user = await User.findById(req.params.id);
+        const user = userId ? await User.findById(userId) : await User.findOne({username: username})
         // パスワードと更新日時を除いて、ユーザー情報を返す
         const { password, updatedAt, ...other} = user._doc;
         return res.status(200).json(other);
